@@ -13,8 +13,11 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.notefortwo.ui.theme.*
 
 @Composable
 fun NoteColumn(list: List<String>){
@@ -40,13 +43,19 @@ fun PurchaseTextField(name: String) {
     Row(modifier = Modifier.heightIn(min = 72.dp)) {
         TextButton(onClick = { isDone = !isDone},
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = Color.Green
+                backgroundColor = Aquamarine
             ),
+
             shape = CircleShape,
             modifier = Modifier
                 .padding(start = 7.dp, end = 4.dp, top = 11.dp, bottom = 11.dp)
                 .fillMaxHeight()
                 .width(42.dp)
+                .shadow(
+                    shape = CircleShape,
+                    elevation = 8.dp,
+                    clip = true
+                )
         ) {
             Crossfade(targetState = isDone) { done ->
                 if (done) {
@@ -59,8 +68,13 @@ fun PurchaseTextField(name: String) {
         Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(4.dp),
-            color = Color.Green,
+                .padding(4.dp)
+                .shadow(
+                    shape = RoundedCornerShape(10.dp),
+                    elevation = 10.dp,
+                    clip = true
+                ),
+            color = Gray,
             shape = RoundedCornerShape(10.dp)
         ) {
             Row {
@@ -81,7 +95,7 @@ fun PurchaseTextField(name: String) {
                         .height(46.dp),
                     onClick = { saved = true },
                     colors = ButtonDefaults.outlinedButtonColors(
-                        backgroundColor = Color.Blue,
+                        backgroundColor = Blue,
                         contentColor = Color.Black
                     ),
                     shape = RoundedCornerShape(8.dp)
@@ -93,5 +107,13 @@ fun PurchaseTextField(name: String) {
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    NoteForTwoTheme {
+        NoteColumn(listOf("1","2","3"))
     }
 }

@@ -41,18 +41,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             NoteForTwoTheme {
-                NoteColumn(listOf("1","2"))
+                NoteColumn(listOf("1","2","3"))
             }
         }
-    }
-}
-
-
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    NoteForTwoTheme {
-        NoteColumn(listOf("1","2"))
     }
 }

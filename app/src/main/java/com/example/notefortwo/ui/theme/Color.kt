@@ -2,7 +2,7 @@ package com.example.notefortwo.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
+val Aquamarine = Color(0xFF90e0ef)
+val Gray = Color(0xFFE9ECEF)
+val Blue = Color(0xFF00b4d8)
+val Teal = Color(0xFF03DAC5)
