@@ -19,5 +19,4 @@ class MainViewModel() : ViewModel() {
         } catch (e: Exception) {
         }
     }
-
 }

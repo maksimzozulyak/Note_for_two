@@ -3,33 +3,16 @@ package com.example.notefortwo.ui
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModelProvider
-import com.example.notefortwo.R
-import com.example.notefortwo.ui.NoteColumn
+import com.example.notefortwo.data.Purchase
 import com.example.notefortwo.ui.theme.NoteForTwoTheme
 import com.example.notefortwo.viewmodel.FactoryViewModel
 import com.example.notefortwo.viewmodel.MainViewModel
-import com.google.android.gms.auth.api.Auth
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.database.ktx.database
 
@@ -41,12 +24,30 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this, FactoryViewModel(this))[MainViewModel::class.java]
+
+        val purchaseList = mutableStateListOf<Purchase>()
         val database = Firebase.database(databaselink)
+        val databaseReference = database.getReference("purchase")
+
+        viewModel = ViewModelProvider(this, FactoryViewModel(this))[MainViewModel::class.java]
+
+        databaseReference.addValueEventListener(object: ValueEventListener {
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (s in snapshot.children) {
+                    val purchase = s.getValue(Purchase::class.java)
+                    if (purchase != null && purchaseList.size> s.key!!.toInt())purchaseList.set(s.key!!.toInt(),purchase)
+                    else if (purchase != null && purchaseList.size <= s.key!!.toInt())purchaseList.add(purchase)
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
+
         setContent {
             GoogleAuth(this, viewModel)
             NoteForTwoTheme {
-                NoteColumn(listOf("1","2","3"))
+                NoteColumn(purchaseList)
             }
         }
     }

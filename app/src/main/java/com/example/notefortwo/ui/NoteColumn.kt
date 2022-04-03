@@ -1,5 +1,6 @@
 package com.example.notefortwo.ui
 
+import android.widget.Toast
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.*
@@ -17,31 +18,39 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.notefortwo.data.Purchase
 import com.example.notefortwo.ui.theme.*
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 @Composable
-fun NoteColumn(list: List<String>){
+fun NoteColumn(list: MutableList<Purchase>){
     LazyColumn(modifier = Modifier
         .fillMaxWidth()
         .padding(top = 40.dp)
     ) {
         items(items = list) { it ->
-            PurchaseTextField(name = it)
+            PurchaseTextField(purchase = it, index = list.indexOf(it))
         }
     }
 }
 
 @Composable
-fun PurchaseTextField(name: String) {
+fun PurchaseTextField(purchase: Purchase, index: Int) {
+    val database = Firebase.database(databaselink)
+    val databaseRef = database.getReference("purchase")
     var saved by remember { mutableStateOf(true) }
-    var text by remember { mutableStateOf("Hello $name") }
-    var isDone by remember { mutableStateOf(false) }
+    var text by remember { mutableStateOf(purchase.field) }
+    var isDone by remember { mutableStateOf(purchase.isDone) }
     val buttonWeight by animateDpAsState(
         if (saved) 0.dp else 76.dp
     )
 
     Row(modifier = Modifier.heightIn(min = 72.dp)) {
-        TextButton(onClick = { isDone = !isDone},
+        TextButton(onClick = { isDone = !isDone
+                databaseRef.child("$index/done").setValue(
+                isDone)
+                             },
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = Aquamarine
             ),
@@ -93,7 +102,10 @@ fun PurchaseTextField(name: String) {
                         .padding(top = 4.dp, end = 8.dp, bottom = 4.dp)
                         .width(buttonWeight)
                         .height(46.dp),
-                    onClick = { saved = true },
+                    onClick = { saved = true
+                        databaseRef.child("$index").setValue(
+                            Purchase(text)
+                        ) },
                     colors = ButtonDefaults.outlinedButtonColors(
                         backgroundColor = Blue,
                         contentColor = Color.Black
@@ -114,6 +126,6 @@ fun PurchaseTextField(name: String) {
 @Composable
 fun DefaultPreview() {
     NoteForTwoTheme {
-        NoteColumn(listOf("1","2","3"))
+
     }
 }
