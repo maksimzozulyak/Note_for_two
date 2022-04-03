@@ -30,13 +30,13 @@ fun NoteColumn(list: MutableList<Purchase>){
         .padding(top = 40.dp)
     ) {
         items(items = list) { it ->
-            PurchaseTextField(purchase = it, index = list.indexOf(it))
+            PurchaseTextField(purchase = it, index = list.indexOf(it), lastIndex = list.size-1)
         }
     }
 }
 
 @Composable
-fun PurchaseTextField(purchase: Purchase, index: Int) {
+fun PurchaseTextField(purchase: Purchase, index: Int, lastIndex: Int) {
     val database = Firebase.database(databaselink)
     val databaseRef = database.getReference("purchase")
     var saved by remember { mutableStateOf(true) }
@@ -105,7 +105,12 @@ fun PurchaseTextField(purchase: Purchase, index: Int) {
                     onClick = { saved = true
                         databaseRef.child("$index").setValue(
                             Purchase(text)
-                        ) },
+                        )
+                        if (index == lastIndex) {
+                            databaseRef.child("${index + 1}").setValue(
+                                Purchase("")
+                            )
+                        } },
                     colors = ButtonDefaults.outlinedButtonColors(
                         backgroundColor = Blue,
                         contentColor = Color.Black
