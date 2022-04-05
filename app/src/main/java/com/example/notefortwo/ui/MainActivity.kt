@@ -30,24 +30,26 @@ class MainActivity : ComponentActivity() {
         val databaseReference = database.getReference("purchase")
 
         viewModel = ViewModelProvider(this, FactoryViewModel(this))[MainViewModel::class.java]
-
+        databaseReference.removeValue()
+        viewModel.addPurchase(databaseReference,0,"")
         databaseReference.addValueEventListener(object: ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
+                purchaseList.clear()
                 for (s in snapshot.children) {
                     val purchase = s.getValue(Purchase::class.java)
-                    if (purchase != null && purchaseList.size> s.key!!.toInt())purchaseList.set(s.key!!.toInt(),purchase)
-                    else if (purchase != null && purchaseList.size <= s.key!!.toInt())purchaseList.add(purchase)
+                    if (purchase != null) {
+                        purchaseList.add(purchase)
+                    }
                 }
             }
             override fun onCancelled(error: DatabaseError) {
             }
         })
-
         setContent {
             GoogleAuth(this, viewModel)
             NoteForTwoTheme {
-                NoteColumn(purchaseList)
+                NoteColumn(purchaseList,viewModel)
             }
         }
     }

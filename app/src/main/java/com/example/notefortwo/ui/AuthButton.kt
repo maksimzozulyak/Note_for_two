@@ -23,6 +23,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 
 @Composable
 fun GoogleAuth(context : Context, viewModel : MainViewModel){
+
     val token = "147044329929-t25e5mu8mi3om62ok5036svq2svd6cs6.apps.googleusercontent.com"
     val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {
         val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)

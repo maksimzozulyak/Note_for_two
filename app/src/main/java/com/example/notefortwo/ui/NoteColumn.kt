@@ -20,23 +20,24 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.notefortwo.data.Purchase
 import com.example.notefortwo.ui.theme.*
+import com.example.notefortwo.viewmodel.MainViewModel
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 @Composable
-fun NoteColumn(list: MutableList<Purchase>){
+fun NoteColumn(list: MutableList<Purchase>, viewModel: MainViewModel){
     LazyColumn(modifier = Modifier
         .fillMaxWidth()
         .padding(top = 40.dp)
     ) {
         items(items = list) { it ->
-            PurchaseTextField(purchase = it, index = list.indexOf(it), lastIndex = list.size-1)
+            PurchaseTextField(purchase = it, index = list.indexOf(it), lastIndex = list.size-1, viewModel)
         }
     }
 }
 
 @Composable
-fun PurchaseTextField(purchase: Purchase, index: Int, lastIndex: Int) {
+fun PurchaseTextField(purchase: Purchase, index: Int, lastIndex: Int, viewModel: MainViewModel) {
     val database = Firebase.database(databaselink)
     val databaseRef = database.getReference("purchase")
     var saved by remember { mutableStateOf(true) }
@@ -103,13 +104,9 @@ fun PurchaseTextField(purchase: Purchase, index: Int, lastIndex: Int) {
                         .width(buttonWeight)
                         .height(46.dp),
                     onClick = { saved = true
-                        databaseRef.child("$index").setValue(
-                            Purchase(text)
-                        )
+                        viewModel.addPurchase(databaseRef,index,text)
                         if (index == lastIndex) {
-                            databaseRef.child("${index + 1}").setValue(
-                                Purchase("")
-                            )
+                            viewModel.addEmptyField(databaseRef, index)
                         } },
                     colors = ButtonDefaults.outlinedButtonColors(
                         backgroundColor = Blue,
@@ -124,13 +121,5 @@ fun PurchaseTextField(purchase: Purchase, index: Int, lastIndex: Int) {
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    NoteForTwoTheme {
-
     }
 }
