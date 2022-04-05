@@ -2,12 +2,12 @@ package com.example.notefortwo.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.TextButton
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -18,6 +18,9 @@ import com.example.notefortwo.viewmodel.MainViewModel
 
 @Composable
 fun ClearListButton(viewModel: MainViewModel){
+
+    val openDialog = remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier.fillMaxWidth().fillMaxHeight(),
         verticalArrangement = Arrangement.Bottom,
@@ -25,7 +28,7 @@ fun ClearListButton(viewModel: MainViewModel){
     ) {
         TextButton(
             onClick = {
-                viewModel.clearList()
+                openDialog.value = true
             },
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = Aquamarine
@@ -37,5 +40,36 @@ fun ClearListButton(viewModel: MainViewModel){
         ) {
             Icon(imageVector = Icons.Default.Delete, contentDescription = null, tint = Color.Black)
         }
+    }
+
+    if (openDialog.value) {
+        AlertDialog(
+            onDismissRequest = {
+                openDialog.value = false
+            },
+            title = {
+                Text(text = "Are you sure?")
+            },
+            buttons = {
+                Row(
+                    modifier = Modifier.padding(all = 8.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Button(
+                        onClick = { openDialog.value = false }
+                    ) {
+                        Text("Cancel")
+                    }
+                    Button(
+                        onClick = {
+                            openDialog.value = false
+                            viewModel.clearList()
+                        }
+                    ) {
+                        Text("Delete")
+                    }
+                }
+            }
+        )
     }
 }

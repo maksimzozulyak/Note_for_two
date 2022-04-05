@@ -13,11 +13,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.notefortwo.data.Purchase
 import com.example.notefortwo.ui.theme.*
 import com.example.notefortwo.viewmodel.MainViewModel
@@ -36,9 +41,11 @@ fun NoteColumn(list: MutableList<Purchase>, viewModel: MainViewModel){
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun PurchaseTextField(purchase: Purchase, index: Int, lastIndex: Int, viewModel: MainViewModel) {
     val database = Firebase.database(databaselink)
+    val keyboardController = LocalSoftwareKeyboardController.current
     val databaseRef = database.getReference("purchase")
     var saved by remember { mutableStateOf(true) }
     var text by remember { mutableStateOf(purchase.field) }
@@ -96,7 +103,14 @@ fun PurchaseTextField(purchase: Purchase, index: Int, lastIndex: Int, viewModel:
                     },
                     modifier = Modifier
                         .weight(1f)
-                        .fillMaxHeight()
+                        .fillMaxHeight(),
+                    textStyle =
+                        if (isDone) TextStyle(
+                            fontSize = 20.sp,
+                            textDecoration = TextDecoration.LineThrough
+                        ) else TextStyle(
+                            fontSize = 20.sp
+                        )
                 )
                 OutlinedButton(
                     modifier = Modifier
@@ -107,7 +121,8 @@ fun PurchaseTextField(purchase: Purchase, index: Int, lastIndex: Int, viewModel:
                         viewModel.addPurchase(index,text)
                         if (index == lastIndex) {
                             viewModel.addEmptyField(index)
-                        } },
+                        }
+                        keyboardController?.hide()     },
                     colors = ButtonDefaults.outlinedButtonColors(
                         backgroundColor = Blue,
                         contentColor = Color.Black

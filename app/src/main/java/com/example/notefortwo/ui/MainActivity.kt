@@ -46,7 +46,6 @@ class MainActivity : ComponentActivity() {
             }
         })
 
-
         setContent {
             NoteForTwoTheme {
                 GoogleAuth(this, viewModel)
