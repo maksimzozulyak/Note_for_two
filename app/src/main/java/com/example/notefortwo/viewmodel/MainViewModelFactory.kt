@@ -2,10 +2,11 @@ package com.example.notefortwo.viewmodel
 
 import android.content.Context
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.database.DatabaseReference
 
-class FactoryViewModel(context: Context): ViewModelProvider.NewInstanceFactory() {
+class FactoryViewModel(private val databaseRef: DatabaseReference): ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
-        return MainViewModel() as T
+        return MainViewModel(databaseRef) as T
     }
 }

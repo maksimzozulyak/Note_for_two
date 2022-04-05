@@ -13,7 +13,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-class MainViewModel() : ViewModel() {
+class MainViewModel(private val databaseRef: DatabaseReference) : ViewModel() {
 
     fun signWithGoogle(credential: AuthCredential){
         try {
@@ -22,19 +22,19 @@ class MainViewModel() : ViewModel() {
         }
     }
 
-    fun addPurchase(databaseRef: DatabaseReference, index: Int, text: String){
+    fun addPurchase(index: Int, text: String){
         databaseRef.child("$index").setValue(
             Purchase(text)
         )
     }
 
-    fun addEmptyField(databaseRef: DatabaseReference, index: Int){
+    fun addEmptyField(index: Int){
         databaseRef.child("${index + 1}").setValue(
             Purchase("")
         )
     }
 
-    fun clearList(databaseRef: DatabaseReference){
+    fun clearList(){
         databaseRef.removeValue()
         databaseRef.child("0").setValue(
             Purchase("")

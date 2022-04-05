@@ -104,9 +104,9 @@ fun PurchaseTextField(purchase: Purchase, index: Int, lastIndex: Int, viewModel:
                         .width(buttonWeight)
                         .height(46.dp),
                     onClick = { saved = true
-                        viewModel.addPurchase(databaseRef,index,text)
+                        viewModel.addPurchase(index,text)
                         if (index == lastIndex) {
-                            viewModel.addEmptyField(databaseRef, index)
+                            viewModel.addEmptyField(index)
                         } },
                     colors = ButtonDefaults.outlinedButtonColors(
                         backgroundColor = Blue,

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModelProvider
 import com.example.notefortwo.data.Purchase
@@ -29,9 +30,7 @@ class MainActivity : ComponentActivity() {
         val database = Firebase.database(databaselink)
         val databaseReference = database.getReference("purchase")
 
-        viewModel = ViewModelProvider(this, FactoryViewModel(this))[MainViewModel::class.java]
-        databaseReference.removeValue()
-        viewModel.addPurchase(databaseReference,0,"")
+        viewModel = ViewModelProvider(this, FactoryViewModel(databaseReference))[MainViewModel::class.java]
         databaseReference.addValueEventListener(object: ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -46,10 +45,13 @@ class MainActivity : ComponentActivity() {
             override fun onCancelled(error: DatabaseError) {
             }
         })
+
+
         setContent {
-            GoogleAuth(this, viewModel)
             NoteForTwoTheme {
-                NoteColumn(purchaseList,viewModel)
+                GoogleAuth(this, viewModel)
+                NoteColumn(purchaseList, viewModel)
+                ClearListButton(viewModel)
             }
         }
     }
