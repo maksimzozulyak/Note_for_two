@@ -1,7 +1,5 @@
 package com.example.notefortwo.ui
 
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.*
@@ -21,13 +19,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModelProvider
 import com.example.notefortwo.data.Purchase
-import com.example.notefortwo.ui.theme.*
-import com.example.notefortwo.viewmodel.FactoryViewModel
+import com.example.notefortwo.ui.theme.Aquamarine
+import com.example.notefortwo.ui.theme.Blue
+import com.example.notefortwo.ui.theme.Gray
 import com.example.notefortwo.viewmodel.MainViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -125,6 +122,7 @@ fun PurchaseTextField(purchase: Purchase, index: Int, lastIndex: Int, viewModel:
         ) {
             Row {
                 TextField(
+                    colors = TextFieldDefaults.textFieldColors(backgroundColor = Gray),
                     value = text,
                     onValueChange = {
                         text = it

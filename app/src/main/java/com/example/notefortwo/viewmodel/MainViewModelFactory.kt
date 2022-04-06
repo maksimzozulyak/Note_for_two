@@ -1,6 +1,5 @@
 package com.example.notefortwo.viewmodel
 
-import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.DatabaseReference
 

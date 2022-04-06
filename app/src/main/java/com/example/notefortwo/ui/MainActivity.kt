@@ -1,21 +1,14 @@
 package com.example.notefortwo.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModelProvider
-import com.example.notefortwo.data.Purchase
 import com.example.notefortwo.ui.theme.NoteForTwoTheme
 import com.example.notefortwo.viewmodel.FactoryViewModel
 import com.example.notefortwo.viewmodel.MainViewModel
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 const val databaselink = "https://note-14194-default-rtdb.europe-west1.firebasedatabase.app"
 
