@@ -1,5 +1,6 @@
 package com.example.notefortwo.ui
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
@@ -78,6 +79,9 @@ fun PurchaseTextField(purchase: Purchase, index: Int, lastIndex: Int, viewModel:
     val buttonWeight by animateDpAsState(
         if (saved) 0.dp else 76.dp
     )
+    if (purchase.field == "" && text == ""){
+        text = ""
+    }
 
     Row(modifier = Modifier.heightIn(min = 72.dp)) {
         TextButton(onClick = { isDone = !isDone
