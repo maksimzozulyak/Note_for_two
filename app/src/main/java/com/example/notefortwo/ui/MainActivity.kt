@@ -26,30 +26,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val purchaseList = mutableStateListOf<Purchase>()
         val database = Firebase.database(databaselink)
         val databaseReference = database.getReference("purchase")
 
         viewModel = ViewModelProvider(this, FactoryViewModel(databaseReference))[MainViewModel::class.java]
-        databaseReference.addValueEventListener(object: ValueEventListener {
-
-            override fun onDataChange(snapshot: DataSnapshot) {
-                purchaseList.clear()
-                for (s in snapshot.children) {
-                    val purchase = s.getValue(Purchase::class.java)
-                    if (purchase != null) {
-                        purchaseList.add(purchase)
-                    }
-                }
-            }
-            override fun onCancelled(error: DatabaseError) {
-            }
-        })
 
         setContent {
             NoteForTwoTheme {
                 GoogleAuth(this, viewModel)
-                NoteColumn(purchaseList, viewModel)
+                NoteColumn(viewModel)
                 ClearListButton(viewModel)
             }
         }

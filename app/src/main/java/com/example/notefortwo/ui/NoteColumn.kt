@@ -23,20 +23,44 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModelProvider
 import com.example.notefortwo.data.Purchase
 import com.example.notefortwo.ui.theme.*
+import com.example.notefortwo.viewmodel.FactoryViewModel
 import com.example.notefortwo.viewmodel.MainViewModel
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 @Composable
-fun NoteColumn(list: MutableList<Purchase>, viewModel: MainViewModel){
+fun NoteColumn(viewModel: MainViewModel){
+
+    val purchaseList = remember {mutableStateListOf<Purchase>()}
+    val database = Firebase.database(databaselink)
+    val databaseReference = database.getReference("purchase")
+    databaseReference.addValueEventListener(object: ValueEventListener {
+
+        override fun onDataChange(snapshot: DataSnapshot) {
+            purchaseList.clear()
+            for (s in snapshot.children) {
+                val purchase = s.getValue(Purchase::class.java)
+                if (purchase != null) {
+                    purchaseList.add(purchase)
+                }
+            }
+        }
+        override fun onCancelled(error: DatabaseError) {
+        }
+    })
+
     LazyColumn(modifier = Modifier
         .fillMaxWidth()
         .padding(top = 40.dp)
     ) {
-        items(items = list) { it ->
-            PurchaseTextField(purchase = it, index = list.indexOf(it), lastIndex = list.size-1, viewModel)
+        items(items = purchaseList) { it ->
+            PurchaseTextField(purchase = it, index = purchaseList.indexOf(it), lastIndex = purchaseList.size-1, viewModel)
         }
     }
 }
@@ -44,6 +68,7 @@ fun NoteColumn(list: MutableList<Purchase>, viewModel: MainViewModel){
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun PurchaseTextField(purchase: Purchase, index: Int, lastIndex: Int, viewModel: MainViewModel) {
+
     val database = Firebase.database(databaselink)
     val keyboardController = LocalSoftwareKeyboardController.current
     val databaseRef = database.getReference("purchase")

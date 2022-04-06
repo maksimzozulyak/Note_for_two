@@ -44,19 +44,21 @@ fun ClearListButton(viewModel: MainViewModel){
 
     if (openDialog.value) {
         AlertDialog(
+            backgroundColor = Color.White,
             onDismissRequest = {
                 openDialog.value = false
             },
             title = {
-                Text(text = "Are you sure?")
+                Text(text = "    Are you sure? \n")
             },
             buttons = {
                 Row(
-                    modifier = Modifier.padding(all = 8.dp),
+                    modifier = Modifier.padding(all = 6.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Button(
-                        onClick = { openDialog.value = false }
+                        onClick = { openDialog.value = false },
+                        modifier = Modifier.padding(end = 3.dp)
                     ) {
                         Text("Cancel")
                     }
@@ -64,7 +66,8 @@ fun ClearListButton(viewModel: MainViewModel){
                         onClick = {
                             openDialog.value = false
                             viewModel.clearList()
-                        }
+                        },
+                        modifier = Modifier.padding(start = 3.dp)
                     ) {
                         Text("Delete")
                     }
